@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+
+        <!-- ═══ START MENU ═══ -->
+        <div id="start-menu" class="menu-overlay">
+            <div class="menu-card">
+                <h1 class="menu-title">Tower Defense</h1>
+                <p class="menu-sub">Defend the path. Build your strategy.</p>
+
+                <div class="menu-section">
+                    <h3>Choose Difficulty</h3>
+                    <div id="diff-grid" class="diff-grid"></div>
+                </div>
+
+                <div class="menu-section">
+                    <h3>Choose Map</h3>
+                    <div id="map-grid" class="map-grid"></div>
+                </div>
+
+                <button id="btn-play" class="play-btn" disabled>Start Game</button>
+            </div>
+        </div>
+
+        <!-- ═══ GAME UI ═══ -->
+        <div id="game-ui" class="hidden">
+            <header id="top-bar">
+                <div class="stat life"><span>❤️</span><span id="lives">20</span></div>
+                <div class="stat gold"><span>💰</span><span id="money">500</span></div>
+                <div id="boss-countdown" class="hidden"></div>
+                <div class="stat wave-label">Wave <span id="wave">0</span></div>
+                <div class="controls-group">
+                    <div class="speed-group">
+                        <button class="speed-btn active" data-speed="1">1×</button>
+                        <button class="speed-btn" data-speed="2">2×</button>
+                        <button class="speed-btn" data-speed="4">4×</button>
+                    </div>
+                    <button id="btn-auto" class="ctrl-btn">Auto: OFF</button>
+                    <button id="btn-skip" class="ctrl-btn gold-btn">Skip ⏩</button>
+                    <button id="btn-start" class="ctrl-btn start-btn">Start Wave</button>
+                </div>
+            </header>
+
+            <div id="boss-bar" class="hidden">
+                <div class="boss-info">
+                    <span id="boss-name">BOSS</span>
+                    <span id="boss-desc" class="boss-desc"></span>
+                </div>
+                <div class="boss-hp-track"><div id="boss-hp-fill"></div></div>
+            </div>
+
+            <aside id="shop">
+                <h3>Towers</h3>
+                <div id="shop-list"></div>
+            </aside>
+
+            <div id="earnings">
+                <div><span>⛏ Farm</span><span id="farm-earnings">0</span></div>
+                <div><span>📊 Total</span><span id="total-earnings">0</span></div>
+            </div>
+
+            <div id="upgrade-panel" class="hidden">
+                <h4 id="sel-name">Tower</h4>
+                <div class="sel-stats">
+                    <span>DMG <b id="sel-dmg">0</b></span>
+                    <span>RNG <b id="sel-rng">0</b></span>
+                    <span>SPD <b id="sel-spd">0</b></span>
+                </div>
+                <div id="sel-extra" class="hidden sel-extra"></div>
+                <div class="sel-actions">
+                    <button id="btn-upgrade" class="ctrl-btn start-btn">Upgrade</button>
+                    <button id="btn-sell" class="ctrl-btn danger-btn"><span id="sel-sell">Sell</span></button>
+                </div>
+            </div>
+
+            <div id="skills-bar">
+                <button class="skill" id="skill-heal" data-skill="heal">
+                    <span class="sk-icon">💚</span><span class="sk-name">Heal</span>
+                    <span class="skill-cd"></span><span class="sk-key">1</span>
+                </button>
+                <button class="skill" id="skill-smite" data-skill="smite">
+                    <span class="sk-icon">⚡</span><span class="sk-name">Smite</span>
+                    <span class="skill-cd"></span><span class="sk-key">2</span>
+                </button>
+                <button class="skill" id="skill-overclock" data-skill="overclock">
+                    <span class="sk-icon">🔥</span><span class="sk-name">Overclock</span>
+                    <span class="skill-cd"></span><span class="sk-key">3</span>
+                </button>
+                <button class="skill" id="skill-blizzard" data-skill="blizzard">
+                    <span class="sk-icon">❄️</span><span class="sk-name">Blizzard</span>
+                    <span class="skill-cd"></span><span class="sk-key">4</span>
+                </button>
+            </div>
+
+            <div id="game-over-screen" class="hidden overlay">
+                <h2>Defeat</h2>
+                <p>Waves Survived: <span id="final-wave">0</span></p>
+                <p class="smaller">Total Gold Earned: <span id="final-earnings">0</span></p>
+                <button id="btn-restart" class="ctrl-btn start-btn big">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
