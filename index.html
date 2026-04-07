@@ -3,113 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tower Defense</title>
+    <meta name="description" content="Epic Tower Defense game with 70+ towers, 60+ enemies, 15 bosses, 15 Super Bosses, 23 maps, and 4 game modes.">
+    <title>Tower Defense — Next Gen Overhaul</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="game-canvas"></canvas>
 
-        <!-- ═══ START MENU ═══ -->
-        <div id="start-menu" class="menu-overlay">
-            <div class="menu-card">
-                <h1 class="menu-title">Tower Defense</h1>
-                <p class="menu-sub">Defend the path. Build your strategy.</p>
+<!-- ═══════════ BACKGROUND PARTICLES ═══════════ -->
+<div id="ambient-bg"></div>
+
+<!-- ═══════════ START MENU ═══════════ -->
+<div id="start-menu" class="glass-screen">
+    <div class="menu-container scale-in">
+        <header class="menu-header">
+            <h1 class="menu-title">TOWER DEFENSE</h1>
+            <p class="menu-subtitle">N E X T &nbsp; G E N &nbsp; U P D A T E</p>
+        </header>
+
+        <div class="menu-layout">
+            <div class="menu-column">
+                <div class="menu-section">
+                    <div class="sec-header">
+                        <span class="sec-icon">⚙️</span>
+                        <h3>Game Mode</h3>
+                        <div class="sec-line"></div>
+                    </div>
+                    <div id="mode-grid" class="mode-grid"></div>
+                </div>
 
                 <div class="menu-section">
-                    <h3>Choose Difficulty</h3>
+                    <div class="sec-header">
+                        <span class="sec-icon">⚡</span>
+                        <h3>Difficulty</h3>
+                        <div class="sec-line"></div>
+                    </div>
                     <div id="diff-grid" class="diff-grid"></div>
                 </div>
+            </div>
 
+            <div class="menu-column scroll-col">
                 <div class="menu-section">
-                    <h3>Choose Map</h3>
+                    <div class="sec-header">
+                        <span class="sec-icon">🗺️</span>
+                        <h3>Select Deployment Zone</h3>
+                        <div class="sec-line"></div>
+                    </div>
                     <div id="map-grid" class="map-grid"></div>
                 </div>
-
-                <button id="btn-play" class="play-btn" disabled>Start Game</button>
             </div>
         </div>
 
-        <!-- ═══ GAME UI ═══ -->
-        <div id="game-ui" class="hidden">
-            <header id="top-bar">
-                <div class="stat life"><span>❤️</span><span id="lives">20</span></div>
-                <div class="stat gold"><span>💰</span><span id="money">500</span></div>
-                <div id="boss-countdown" class="hidden"></div>
-                <div class="stat wave-label">Wave <span id="wave">0</span></div>
-                <div class="controls-group">
-                    <div class="speed-group">
-                        <button class="speed-btn active" data-speed="1">1×</button>
-                        <button class="speed-btn" data-speed="2">2×</button>
-                        <button class="speed-btn" data-speed="4">4×</button>
-                    </div>
-                    <button id="btn-auto" class="ctrl-btn">Auto: OFF</button>
-                    <button id="btn-skip" class="ctrl-btn gold-btn">Skip ⏩</button>
-                    <button id="btn-start" class="ctrl-btn start-btn">Start Wave</button>
-                </div>
-            </header>
+        <div class="menu-footer">
+            <button id="btn-start" class="btn-mega" disabled>
+                <div class="btn-glitch"></div>
+                <span>INITIALIZE MISSION</span>
+            </button>
+        </div>
+    </div>
+</div>
 
-            <div id="boss-bar" class="hidden">
-                <div class="boss-info">
-                    <span id="boss-name">BOSS</span>
-                    <span id="boss-desc" class="boss-desc"></span>
+<!-- ═══════════ GAME UI ═══════════ -->
+<div id="game-ui" class="hidden">
+    <!-- The canvas will now dynamically scale to full window via JS -->
+    <canvas id="game-canvas"></canvas>
+
+    <div id="hud-overlay">
+        <!-- Top Stats Bar -->
+        <div id="top-hud">
+            <div class="hud-stat-box money-box">
+                <span class="stat-icon">💳</span>
+                <span id="money" class="stat-val">500</span>
+            </div>
+            <div class="hud-stat-box lives-box">
+                <span class="stat-icon">❤️</span>
+                <span id="lives" class="stat-val">20</span>
+            </div>
+            <div class="hud-stat-box wave-box">
+                <span class="stat-icon">WAVE</span>
+                <span id="wave" class="stat-val">0</span>
+                <span id="mode-info" class="mode-badge"></span>
+            </div>
+            <div class="hud-stat-box extra-box">
+                <span class="stat-icon">⛏️</span><span id="farm-earnings" class="stat-mini">0</span>
+                <span class="stat-icon">📊</span><span id="total-earnings" class="stat-mini">0</span>
+            </div>
+            <div id="controls-panel" class="right-controls">
+                <button id="btn-next-wave" class="btn-hud primary-btn">▶ NEXT WAVE</button>
+                <button id="btn-skip" class="btn-hud">⏩ SKIP</button>
+                <div class="speed-toggles">
+                    <button id="btn-speed-1" class="btn-hud speed-btn active" data-speed="1">1x</button>
+                    <button id="btn-speed-2" class="btn-hud speed-btn" data-speed="2">2x</button>
+                    <button id="btn-speed-3" class="btn-hud speed-btn" data-speed="3">3x</button>
                 </div>
-                <div class="boss-hp-track"><div id="boss-hp-fill"></div></div>
+                <button id="btn-auto" class="btn-hud">AUTO: OFF</button>
+                <button id="btn-mute" class="btn-hud btn-icon">🔊</button>
+            </div>
+        </div>
+
+        <!-- Boss Bar -->
+        <div id="boss-bar" class="boss-hud hidden">
+            <div class="boss-info">
+                <div class="boss-name" id="boss-name">ANOMALY DETECTED</div>
+                <div class="boss-desc" id="boss-desc">Class V Threat</div>
+            </div>
+            <div class="boss-hp-frame">
+                <div class="boss-hp-bar" id="boss-hp-fill"></div>
+            </div>
+            <div id="boss-countdown" class="boss-countdown hidden"></div>
+        </div>
+
+        <!-- Bottom Skills -->
+        <div id="bottom-hud">
+            <div id="skills-panel" class="skills-dock">
+                <button id="skill-heal" class="btn skill-btn" data-skill="heal">
+                    <div class="skill-icon">💚</div><span class="skill-cd"></span><span class="skill-key">1</span>
+                </button>
+                <button id="skill-smite" class="btn skill-btn" data-skill="smite">
+                    <div class="skill-icon">⚡</div><span class="skill-cd"></span><span class="skill-key">2</span>
+                </button>
+                <button id="skill-overclock" class="btn skill-btn" data-skill="overclock">
+                    <div class="skill-icon">🔥</div><span class="skill-cd"></span><span class="skill-key">3</span>
+                </button>
+                <button id="skill-blizzard" class="btn skill-btn" data-skill="blizzard">
+                    <div class="skill-icon">❄️</div><span class="skill-cd"></span><span class="skill-key">4</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Side Shop / Upgrade -->
+        <div id="right-sidebar">
+            <div id="shop-panel" class="hud-panel glass-panel">
+                <div class="panel-header">DEPLOYMENT ARMORY</div>
+                <div id="category-tabs" class="category-tabs"></div>
+                <div id="tower-list" class="tower-list custom-scroll"></div>
             </div>
 
-            <aside id="shop">
-                <h3>Towers</h3>
-                <div id="shop-list"></div>
-            </aside>
-
-            <div id="earnings">
-                <div><span>⛏ Farm</span><span id="farm-earnings">0</span></div>
-                <div><span>📊 Total</span><span id="total-earnings">0</span></div>
-            </div>
-
-            <div id="upgrade-panel" class="hidden">
-                <h4 id="sel-name">Tower</h4>
-                <div class="sel-stats">
-                    <span>DMG <b id="sel-dmg">0</b></span>
-                    <span>RNG <b id="sel-rng">0</b></span>
-                    <span>SPD <b id="sel-spd">0</b></span>
+            <div id="upgrade-panel" class="hud-panel glass-panel hidden">
+                <div class="panel-header">TOWER INTERFACE</div>
+                <h4 id="sel-name" class="sel-title"></h4>
+                <div class="stat-grid">
+                    <div class="stat-cell"><span class="lbl">DMG</span><span id="sel-dmg" class="val"></span></div>
+                    <div class="stat-cell"><span class="lbl">RNG</span><span id="sel-rng" class="val"></span></div>
+                    <div class="stat-cell"><span class="lbl">SPD</span><span id="sel-spd" class="val"></span></div>
                 </div>
-                <div id="sel-extra" class="hidden sel-extra"></div>
-                <div class="sel-actions">
-                    <button id="btn-upgrade" class="ctrl-btn start-btn">Upgrade</button>
-                    <button id="btn-sell" class="ctrl-btn danger-btn"><span id="sel-sell">Sell</span></button>
+                <div id="sel-extra" class="sel-extra hidden"></div>
+                <div class="action-btns">
+                    <button id="btn-upgrade" class="btn action-btn upgrade-action"></button>
+                    <button id="btn-sell" class="btn action-btn sell-action"><span id="sel-sell"></span></button>
                 </div>
-            </div>
-
-            <div id="skills-bar">
-                <button class="skill" id="skill-heal" data-skill="heal">
-                    <span class="sk-icon">💚</span><span class="sk-name">Heal</span>
-                    <span class="skill-cd"></span><span class="sk-key">1</span>
-                </button>
-                <button class="skill" id="skill-smite" data-skill="smite">
-                    <span class="sk-icon">⚡</span><span class="sk-name">Smite</span>
-                    <span class="skill-cd"></span><span class="sk-key">2</span>
-                </button>
-                <button class="skill" id="skill-overclock" data-skill="overclock">
-                    <span class="sk-icon">🔥</span><span class="sk-name">Overclock</span>
-                    <span class="skill-cd"></span><span class="sk-key">3</span>
-                </button>
-                <button class="skill" id="skill-blizzard" data-skill="blizzard">
-                    <span class="sk-icon">❄️</span><span class="sk-name">Blizzard</span>
-                    <span class="skill-cd"></span><span class="sk-key">4</span>
-                </button>
-            </div>
-
-            <div id="game-over-screen" class="hidden overlay">
-                <h2>Defeat</h2>
-                <p>Waves Survived: <span id="final-wave">0</span></p>
-                <p class="smaller">Total Gold Earned: <span id="final-earnings">0</span></p>
-                <button id="btn-restart" class="ctrl-btn start-btn big">Main Menu</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script type="module" src="js/main.js"></script>
+<!-- ═══════════ GAME OVER ═══════════ -->
+<div id="game-over-screen" class="hidden full-overlay">
+    <div class="overlay-modal loss-modal">
+        <h1 class="glitch-text" data-text="SYSTEM FAILURE">SYSTEM FAILURE</h1>
+        <p>Defenses Breached at Wave <span id="final-wave" class="hl-red">0</span></p>
+        <p>Total Credits Earned: <span id="final-earnings" class="hl-gold">0</span></p>
+        <button id="btn-restart" class="btn-mega">REBOOT SYSTEM</button>
+    </div>
+</div>
+
+<!-- ═══════════ VICTORY SCREEN ═══════════ -->
+<div id="victory-screen" class="hidden full-overlay">
+    <div class="overlay-modal win-modal">
+        <h1>MISSION ACCOMPLISHED</h1>
+        <p class="victory-sub">Threat Neutralized</p>
+        <div class="win-stats">
+            <p>Mode: <span id="victory-mode" class="hl-blue">Campaign</span></p>
+            <p>Waves: <span id="victory-wave" class="hl-blue">50</span></p>
+            <p>Credits: <span id="victory-earnings" class="hl-gold">0</span></p>
+        </div>
+        <button id="btn-victory-restart" class="btn-mega win-btn">RETURN TO BASE</button>
+    </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
